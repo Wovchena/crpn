@@ -45,6 +45,7 @@ def vis_detections(im, class_name, dets, thresh=0.5):
     ax.imshow(im, aspect='equal')
     for i in inds:
         bbox = dets[i, :4]
+        print(dets[i])
         score = dets[i, -1]
 
         ax.add_patch(
@@ -80,7 +81,7 @@ def vis_quads(im, class_name, dets):
     im = im[:, :, (2, 1, 0)]
     plt.cla()
     plt.imshow(im)
-    plt.show()
+    # plt.show()
 
 def demo(net, image_name):
     """Detect object classes in an image using pre-computed object proposals."""
@@ -97,8 +98,7 @@ def demo(net, image_name):
 
     # Visualize detections for each class
     if boxes.shape[1] == 5:
-        print ('Detection took {:.3f}s for '
-            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
+        print('IF'* 10)
         CONF_THRESH = 0.8
         NMS_THRESH = 0.3
         for cls_ind, cls in enumerate(CLASSES[1:]):
@@ -109,8 +109,9 @@ def demo(net, image_name):
                               cls_scores[:, np.newaxis])).astype(np.float32)
             keep = nms(dets, NMS_THRESH)
             dets = dets[keep, :]
-            vis_detections(im, cls, dets, thresh=CONF_THRESH)
+            vis_detections(im, cls, dets, thresh=CONF_TsHRESH)
     else:
+        print('else' * 10)
         CONF_THRESH = 0.5
         for cls_ind, cls in enumerate(CLASSES[1:]):
             cls_ind += 1  # because we skipped background
@@ -121,8 +122,9 @@ def demo(net, image_name):
             cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32, copy=False)
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep, :]
-            print ('Detection took {:.3f}s for '
-                '{:d} text regions').format(timer.total_time, len(keep))
+            print(cls_dets)
+
+            np.savetxt('/home/wov/fots/crpn/data/res/' + 'res_' + image_name[:-4] + '.txt', cls_dets[:, :8], fmt='%d', delimiter=', ')
             vis_quads(im, cls, cls_dets)
 
 def parse_args():
@@ -170,6 +172,8 @@ if __name__ == '__main__':
         raise IOError(('{:s} not found.\nDid you run ./data/script/'
                        'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
+    args.cpu_mode = True
+
     if args.cpu_mode:
         caffe.set_mode_cpu()
     else:
@@ -178,17 +182,18 @@ if __name__ == '__main__':
         cfg.GPU_ID = args.gpu_id
     net = caffe.Net(prototxt, caffemodel, caffe.TEST)
 
-    print '\n\nLoaded network {:s}'.format(caffemodel)
+    print('\n\nLoaded network {:s}'.format(caffemodel))
 
     # Warmup on a dummy image
     # im = 128 * np.ones((300, 500, 3), dtype=np.uint8)
     # for i in xrange(2):
     #     _, _= im_detect(net, im)
 
-    im_names = ['img_10.jpg', 'img_14.jpg', 'img_45.jpg']
-    for im_name in im_names:
-        print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-        print 'Demo for data/demo/{}'.format(im_name)
+    # im_names = ['img_10.jpg', 'img_14.jpg', 'img_45.jpg']
+    for im_name in os.listdir('/home/wov/fots/crpn/data/demo'):
+        print ('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print ('Demo for data/demo/{}'.format(im_name))
         demo(net, im_name)
 
-    plt.show()
+
+    # plt.show()

@@ -3,8 +3,8 @@
 # Written by Linjie Deng
 # --------------------------------------------------------
 import numpy as np
-from quad_convert import quad_2_aabb
-from sort_points import sort_points
+from .quad_convert import quad_2_aabb
+from .sort_points import sort_points
 
 
 def quad_transform(ex_rois, gt_rois):
@@ -103,7 +103,9 @@ def clip_quads(quads, im_shape):
     """
     Clip quads to image boundaries.
     """
+    quads = np.nan_to_num(quads, copy=False)
     quads[:, 0::8] = np.maximum(np.minimum(quads[:, 0::8], im_shape[1] - 1), 0)
+    print(quads[:, 0::8], im_shape[1] - 1)
     quads[:, 1::8] = np.maximum(np.minimum(quads[:, 1::8], im_shape[0] - 1), 0)
     quads[:, 2::8] = np.maximum(np.minimum(quads[:, 2::8], im_shape[1] - 1), 0)
     quads[:, 3::8] = np.maximum(np.minimum(quads[:, 3::8], im_shape[0] - 1), 0)

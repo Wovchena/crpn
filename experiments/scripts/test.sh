@@ -40,7 +40,7 @@ LOG="experiments/logs/test_${NET}.`date +'%Y-%m-%d_%H-%M-%S'`"
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
-time ./tools/test_net.py --gpu 0 \
+time python3 ./tools/test_net.py \
   --def models/${NET}/test.pt \
   --net ${MODEL} \
   --imdb ${TEST_IMDB} \

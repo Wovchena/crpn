@@ -95,7 +95,7 @@ class ProposalLayer(caffe.Layer):
             scores = scores[:post_nms_topN]
         if proposals.shape[0] == 0:
             # add whole image to avoid error
-            print 'NO PROPOSALS!'
+            print ('NO PROPOSALS!')
             proposals = np.array([[0, 0, im_info[1], 0, im_info[1], im_info[0], 0, im_info[0]]])
             scores = np.array([0.0])
 

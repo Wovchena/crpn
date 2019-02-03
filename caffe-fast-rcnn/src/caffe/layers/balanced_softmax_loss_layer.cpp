@@ -206,7 +206,7 @@ void BalancedSoftmaxWithLossLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*
 }
 
 #ifdef CPU_ONLY
-STUB_GPU(BalancedSoftmaxWithLossLayer);
+// STUB_GPU(BalancedSoftmaxWithLossLayer);
 #endif
 
 INSTANTIATE_CLASS(BalancedSoftmaxWithLossLayer);

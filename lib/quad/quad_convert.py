@@ -114,5 +114,5 @@ def quad_2_aabb(quads):
 
 if __name__ == '__main__':
     temps = obb_2_quad(np.array([1, 1, 4, 2, 90], dtype=np.float32))
-    print temps
+    print (temps)
 
